@@ -1,0 +1,22 @@
+{
+  "name": "docx-extractor",
+  "version": "1.0.0",
+  "description": "Automated DOCX Content Extractor and Printable Generator",
+  "main": "extract_docx_content.js",
+  "scripts": {
+    "extract": "node extract_docx_content.js",
+    "start": "node extract_docx_content.js"
+  },
+  "keywords": [
+    "docx",
+    "extractor",
+    "attendance",
+    "printable"
+  ],
+  "author": "UPHSD Molino CCS OJT Team",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "fast-xml-parser": "^4.3.3"
+  }
+}

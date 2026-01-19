@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <button class="admin-login-btn" id="adminBtn" onclick="showLogin()">🔐 Admin Login</button>
+    <button class="admin-logout-btn" id="adminLogoutBtn" onclick="adminLogout()">🚪 Logout</button>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+                <h2>Admin Login</h2>
+            </div>
+            <form onsubmit="return adminLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="adminUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modern Confirmation Modal -->
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+            </div>
+            <div class="confirm-modal-body" id="confirmBody">
+            </div>
+            <div class="confirm-modal-footer">
+                <button class="confirm-btn confirm-btn-cancel" onclick="closeConfirmModal(false)">Cancel</button>
+                <button class="confirm-btn confirm-btn-confirm" id="confirmButton" onclick="closeConfirmModal(true)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Faculty Modal -->
+    <div id="editFacultyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('editFacultyModal')">&times;</span>
+                <h2>Edit Faculty</h2>
+            </div>
+            <form onsubmit="return saveFacultyMember(event)">
+                <input type="hidden" id="editFacultyId">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="editFacultyName" required>
+                </div>
+                <div class="form-group">
+                    <label>Designation</label>
+                    <select id="editFacultyDesignation" required>
+                        <option value="FACULTY">FACULTY</option>
+                        <option value="OIC">OIC</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Attendance Modal -->
+    <div id="editAttendanceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeModal('editAttendanceModal')">&times;</span>
+                <h2>Edit Attendance</h2>
+            </div>
+            <form onsubmit="return saveAttendance(event)">
+                <input type="hidden" id="editAttendanceId">
+                <input type="hidden" id="editTimeIn">
+                <input type="hidden" id="editTimeOut">
+                <div class="form-group">
+                    <label>Transfer to Faculty</label>
+                    <select id="editAttendanceName" required style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px;">
+                        <option value="">-- Select Faculty Member --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Time In</label>
+                    <div class="time-picker-container">
+                        <div class="time-display" id="displayTimeIn">Not set</div>
+                        <button type="button" class="time-picker-btn" onclick="openTimePicker('in')">⏰ Set Time</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Time Out</label>
+                    <div class="time-picker-container">
+                        <div class="time-display" id="displayTimeOut">Not set</div>
+                        <button type="button" class="time-picker-btn" onclick="openTimePicker('out')">⏰ Set Time</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Time Picker Modal -->
+    <div id="timePickerModal" class="time-picker-modal">
+        <div class="time-picker-content">
+            <div class="time-picker-header">
+                <h3 id="timePickerTitle">Set Time</h3>
+            </div>
+            <div class="time-picker-selectors">
+                <select id="hourSelect">
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <select id="minuteSelect"></select>
+                <select id="secondSelect"></select>
+                <select id="periodSelect">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+            <div class="time-picker-actions">
+                <button class="btn-time-cancel" onclick="closeTimePicker()">Cancel</button>
+                <button class="btn-time-clear" onclick="clearTime()">Clear</button>
+                <button class="btn-time-set" onclick="setTime()">Set Time</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>UNIVERSITY OF PERPETUAL HELP SYSTEM DALTA</h1>
+            <h2>College of Computer Studies - Faculty Attendance Tracker</h2>
+        </div>
+
+        <div class="date-display" id="dateDisplay"></div>
+
+        <div class="main-content">
+            <div id="alertContainer"></div>
+
+            <div class="teacher-selector">
+                <h3>📋 Select Faculty Member</h3>
+                <div class="teacher-grid" id="teacherGrid"></div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn btn-time-in" id="timeInBtn" onclick="timeIn()" disabled>
+                    ⏰ TIME IN
+                </button>
+                <button class="action-btn btn-time-out" id="timeOutBtn" onclick="timeOut()" disabled>
+                    🏁 TIME OUT
+                </button>
+                <button class="action-btn" style="background: #007bff;" onclick="printDocument()">
+                    🖨️ PRINT
+                </button>
+            </div>
+
+            <div class="attendance-table">
+                <h3 style="color: maroon; margin-bottom: 15px;">📊 Today's Attendance Records</h3>
+                <table id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceBody">
+                    </tbody>
+                </table>
+                <button class="clear-btn" onclick="clearAllRecords()">🗑️ Clear All Records</button>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="admin-panel" style="display: none;">
+                <div style="margin-bottom: 20px;">
+                    <h2 style="color: maroon; display: inline-block;">Admin Panel</h2>
+                    <button class="logout-btn" onclick="adminLogout()">Logout</button>
+                    <div style="clear: both;"></div>
+                </div>
+
+                <div class="admin-tabs">
+                    <button class="admin-tab active" onclick="showAdminTab('attendance')">Manage Attendance</button>
+                    <button class="admin-tab" onclick="showAdminTab('faculty')">Manage Faculty</button>
+                    <button class="admin-tab" onclick="showAdminTab('import')">Import Layout</button>
+                    <button class="admin-tab" onclick="showAdminTab('settings')">Settings</button>
+                </div>
+
+                <div id="adminAttendance" class="admin-section active">
+                    <h3>Edit Attendance Records</h3>
+                    <div id="adminAttendanceList"></div>
+                </div>
+
+                <div id="adminFaculty" class="admin-section">
+                    <h3>Manage Faculty Members</h3>
+                    <button class="btn-submit" onclick="addNewFaculty()" style="width: auto; margin-bottom: 20px;">+ Add New Faculty</button>
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Select Faculty to Edit/Delete</label>
+                        <select id="facultySelector" onchange="selectFacultyFromDropdown()" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px;">
+                            <option value="">-- Select a Faculty Member --</option>
+                        </select>
+                    </div>
+                    
+                    <div id="selectedFacultyInfo" style="margin-top: 20px; display: none;">
+                        <div class="faculty-item">
+                            <div class="faculty-info" id="selectedFacultyDetails"></div>
+                            <div class="faculty-actions">
+                                <button class="btn-edit" onclick="editSelectedFaculty()">Edit</button>
+                                <button class="btn-delete" onclick="deleteSelectedFaculty()">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="adminImport" class="admin-section">
+                    <h3>Import Layout from DOCX</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Upload a DOCX file to import its format and apply it to the attendance sheet.</p>
+                    <div class="form-group">
+                        <label>Select DOCX File</label>
+                        <input type="file" id="docxFileInput" accept=".docx" style="padding: 10px; border: 2px solid #ddd; border-radius: 5px; width: 100%;">
+                    </div>
+                    <button class="btn-submit" onclick="importDocxLayout()" style="width: auto; margin-top: 10px;">📥 Import Layout</button>
+                    <div id="importStatus" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;"></div>
+                </div>
+
+                <div id="adminSettings" class="admin-section">
+                    <h3>Admin Settings</h3>
+                    <form onsubmit="return changeAdminCredentials(event)">
+                        <div class="form-group">
+                            <label>New Username</label>
+                            <input type="text" id="newUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn-submit">Update Credentials</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print-only section with DOCX format -->
+    <div class="print-only" id="printSection">
+        <div class="print-header">
+            <div class="print-header-left">
+                <img src="extracted_content/images/image3.jpeg" alt="UPHSD Logo">
+            </div>
+            <div class="print-header-center">
+                <h1>UNIVERSITY OF</h1>
+                <h2>PERPETUAL HELP</h2>
+                <h3>SYSTEM DALTA</h3>
+            </div>
+            <div class="print-header-right">
+                <div class="print-doc-code">UPHMO-CCS-GEN-901/rev0</div>
+                <div class="print-header-right-logos">
+                    <div class="print-header-right-logos-item">
+                        <img src="extracted_content/images/image1.png" alt="CCS Logo">
+                    </div>
+                    <div class="print-header-right-logos-item">
+                        <img src="extracted_content/images/image2.png" alt="ISO Certification">
+                        <div class="print-ccs-label">College of Computer Studies</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="print-title">FACULTY ATTENDANCE LOG</div>
+        <div class="print-date-field" id="printDate"></div>
+
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>NO.</th>
+                    <th>NAME</th>
+                    <th>DESIGNATION</th>
+                    <th>TIME IN</th>
+                    <th class="signature-col">SIGNATURE</th>
+                    <th>TIME OUT</th>
+                    <th class="signature-col">SIGNATURE</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+            </tbody>
+        </table>
+
+        <div class="print-footer">
+            <div class="print-footer-address">
+                Salawag-Zapote Road, Molino 3, City of Bacoor, 4102 Philippines • Tel. No.: (046) 477-0602<br>
+                www.perpetualdalta.edu.ph
+            </div>
+            <div class="print-footer-campus">Molino Campus</div>
+        </div>
+    </div>
+</body>
+</html>
