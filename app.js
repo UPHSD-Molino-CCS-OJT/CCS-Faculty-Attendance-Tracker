@@ -703,8 +703,19 @@ function updateAttendanceTable() {
 }
 
 // Show alert message
-function showAlert(message, type) {
+function showAlert(message, type, clearPrevious = false) {
     const container = document.getElementById('alertContainer');
+    
+    // Clear previous alerts if requested (useful for selection messages)
+    if (clearPrevious || message.startsWith('Selected:')) {
+        const existingAlerts = container.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => {
+            if (alert.textContent.startsWith('Selected:')) {
+                alert.remove();
+            }
+        });
+    }
+    
     const alert = document.createElement('div');
     alert.className = `alert alert-${type}`;
     alert.textContent = message;
