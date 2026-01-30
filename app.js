@@ -141,6 +141,7 @@ function init() {
     loadFaculty();
     loadRecords();
     displayDate();
+    startClock();
     renderTeacherGrid();
     updateAttendanceTable();
     initTimePicker();
@@ -556,6 +557,24 @@ function displayDate() {
     const today = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', options);
+}
+
+// Display and update current time
+function displayTime() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true 
+    });
+    document.getElementById('timeDisplay').textContent = timeStr;
+}
+
+// Start the clock
+function startClock() {
+    displayTime();
+    setInterval(displayTime, 1000);
 }
 
 // Render teacher selection grid
