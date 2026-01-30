@@ -1,12 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <meta name="description" content="Faculty Attendance Tracker for UPHSD College of Computer Studies">
+    <meta name="theme-color" content="#800000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CCS Attendance">
+    
+    <title>CCS Faculty Attendance Tracker</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96x96.png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
     <button class="admin-login-btn" id="adminBtn" onclick="showLogin()">🔐 Admin Login</button>
@@ -151,9 +180,14 @@
             <h2>College of Computer Studies - Faculty Attendance Tracker</h2>
         </div>
 
-        <div class="date-display" id="dateDisplay"></div>
+        <div class="date-display">
+            <span id="dateDisplay"></span>
+            <span class="time-separator">|</span>
+            <span id="timeDisplay" class="current-time"></span>
+        </div>
 
         <div class="main-content">
+            <div class="left-panel">
             <div id="alertContainer"></div>
 
             <div class="teacher-selector">
@@ -172,7 +206,9 @@
                     🖨️ PRINT
                 </button>
             </div>
+            </div>
 
+            <div class="right-panel">
             <div class="attendance-table">
                 <h3 style="color: maroon; margin-bottom: 15px;">📊 Today's Attendance Records</h3>
                 <table id="attendanceTable">
@@ -190,6 +226,7 @@
                     </tbody>
                 </table>
                 <button class="clear-btn" onclick="clearAllRecords()">🗑️ Clear All Records</button>
+            </div>
             </div>
 
             <!-- Admin Panel -->
