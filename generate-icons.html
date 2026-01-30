@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PWA Icon Generator - CCS Attendance</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        h1 { color: #800000; }
+        .icon-preview { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; }
+        .icon-item { text-align: center; }
+        canvas { border: 1px solid #ddd; border-radius: 10px; }
+        button { background: #800000; color: white; border: none; padding: 15px 30px; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #600000; }
+        .instructions { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 PWA Icon Generator</h1>
+        <p>Generate app icons for your CCS Faculty Attendance Tracker PWA</p>
+        
+        <div class="icon-preview" id="iconPreview"></div>
+        
+        <button onclick="generateAllIcons()">📥 Generate & Download All Icons</button>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Click "Generate & Download All Icons" button</li>
+                <li>Save each icon to the <code>icons/</code> folder</li>
+                <li>Or right-click each icon and "Save image as..."</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background - maroon gradient
+            const gradient = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+            gradient.addColorStop(0, '#a00000');
+            gradient.addColorStop(1, '#600000');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.15);
+            ctx.fill();
+            
+            // Inner circle
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Text - CCS
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.25}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('CCS', size/2, size * 0.4);
+            
+            // Subtext
+            ctx.font = `${size * 0.1}px Arial`;
+            ctx.fillText('ATTENDANCE', size/2, size * 0.6);
+            
+            // Clock icon
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.02;
+            ctx.beginPath();
+            ctx.arc(size/2, size * 0.78, size * 0.1, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Clock hands
+            ctx.beginPath();
+            ctx.moveTo(size/2, size * 0.78);
+            ctx.lineTo(size/2, size * 0.72);
+            ctx.moveTo(size/2, size * 0.78);
+            ctx.lineTo(size * 0.55, size * 0.78);
+            ctx.stroke();
+            
+            return canvas;
+        }
+        
+        function generateAllIcons() {
+            sizes.forEach(size => {
+                const canvas = createIcon(size);
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+        
+        // Preview icons
+        window.onload = function() {
+            const preview = document.getElementById('iconPreview');
+            sizes.forEach(size => {
+                const div = document.createElement('div');
+                div.className = 'icon-item';
+                const canvas = createIcon(Math.min(size, 128)); // Limit preview size
+                canvas.style.width = Math.min(size, 128) + 'px';
+                canvas.style.height = Math.min(size, 128) + 'px';
+                div.appendChild(canvas);
+                div.innerHTML += `<br><small>${size}x${size}</small>`;
+                preview.appendChild(div);
+            });
+        };
+    </script>
+</body>
+</html>
