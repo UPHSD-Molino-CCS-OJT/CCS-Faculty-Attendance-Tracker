@@ -1,66 +1,106 @@
-# DOCX Content Extractor & Printable Generator
+# CCS Faculty Attendance Tracker
 
 ## Overview
-This tool **automatically extracts images, text, and header content** from Word documents (`.docx`) and creates **printable HTML** versions with embedded images.
+A **Progressive Web App (PWA)** for tracking faculty attendance at UPHSD College of Computer Studies. Features real-time time tracking, admin management, and offline support.
 
 ## Features
-- ✅ **Automatic image extraction** from headers and body
-- ✅ **Text extraction** from document and headers
-- ✅ **Printable HTML generation** with professional formatting
-- ✅ **Print-ready attendance sheets** (6 sheets per document)
-- ✅ **Comprehensive extraction report** in Markdown format
+- ✅ **Faculty Time In/Out** with confirmation dialogs
+- ✅ **Real-time Clock** display
+- ✅ **Admin Panel** for managing faculty and attendance records
+- ✅ **Print-ready** attendance sheets with UPHSD branding
+- ✅ **Progressive Web App** - installable on desktop/mobile
+- ✅ **Offline Support** - works without internet
+- ✅ **Local Storage** - data persists across sessions
 
-## Quick Start
+---
 
-### 1. Install Dependencies
+## 🚀 Quick Start
+
+### Option 1: Simple (No PWA features)
+Just double-click `attendance_tracker.html` to open in browser.
+
+### Option 2: With PWA Features (Recommended)
+
+#### Using Python:
 ```bash
-npm install
+cd "c:\Users\ferre\Desktop\OJT Systems\CCS-Faculty-Attendance-Tracker"
+python -m http.server 8000
+```
+Then open: **http://localhost:8000/attendance_tracker.html**
+
+#### Using Node.js:
+```bash
+cd "c:\Users\ferre\Desktop\OJT Systems\CCS-Faculty-Attendance-Tracker"
+npx serve .
+```
+Then open the URL shown in the terminal (e.g., http://localhost:3000/attendance_tracker.html)
+
+---
+
+## 📱 Installing as PWA
+
+1. Start the server (see above)
+2. Open the URL in **Chrome** or **Edge**
+3. Look for the **install icon** (⊕) in the address bar
+4. Click **"Install"** or go to Menu → **"Install CCS Faculty Attendance Tracker"**
+
+The app will:
+- Appear on your desktop/home screen
+- Run in standalone mode (no browser UI)
+- Work offline after first load
+
+---
+
+## 🔐 Admin Login
+
+- **Username:** `admin`
+- **Password:** `admin123`
+
+Admin features:
+- Edit/delete attendance records
+- Manage faculty members
+- Import DOCX layouts
+- Change admin credentials
+
+---
+
+## 📋 How to Use
+
+1. **Select a faculty member** from the grid
+2. Click **⏰ TIME IN** when they arrive
+3. Click **🏁 TIME OUT** when they leave
+4. Click **🖨️ PRINT** to generate printable attendance sheet
+
+---
+
+## 📁 Project Structure
+
+```
+CCS-Faculty-Attendance-Tracker/
+├── attendance_tracker.html    # Main application
+├── app.js                     # Application logic
+├── styles.css                 # Styling
+├── manifest.json              # PWA manifest
+├── sw.js                      # Service Worker (offline support)
+├── icons/                     # App icons for PWA
+├── generate-icons.html        # Tool to generate app icons
+├── extract_docx_content.js    # DOCX extractor utility
+├── package.json               # Node.js dependencies
+└── extracted_content/         # Extracted images and reports
+    └── images/
 ```
 
-### 2. Run the Extractor
-```bash
-node extract_docx_content.js
-# or
-npm start
-```
+---
 
-### 3. Check the Output
-The script creates an `extracted_content` folder with:
-- **images/** - All extracted images (PNG, JPEG, etc.)
-- **extraction_report.md** - Detailed extraction report
-- **printable_attendance.html** - Ready-to-print HTML file
+## 🎨 Generate PWA Icons
 
-### 3. Print the Attendance Sheet
-1. Open `extracted_content/printable_attendance.html` in your browser
-2. Press **Ctrl+P** (or **Cmd+P** on Mac)
-3. Select your printer and print!
+1. Open `generate-icons.html` in your browser
+2. Click **"Generate & Download All Icons"**
+3. Save all icons to the `icons/` folder
 
-## What Gets Extracted?
+---
 
-### From the DOCX file:
-- **Header Images**: University logo, department emblems, etc.
-- **Header Text**: Document codes, titles, department names
-- **Document Text**: All faculty names, designations, and content
-- **Media Files**: All embedded images in original quality
-
-## Images Extracted
-
-From **ATTENDANCE-SHEET-CCS-2026.docx**:
-- `image1.png` (27,336 bytes) - Document code image
-- `image2.png` (30,799 bytes) - Text graphic
-- `image3.jpeg` (157,586 bytes) - **UPHSD Logo**
-
-## Printable HTML Features
-
-The generated HTML includes:
-- ✅ Professional header with all images
-- ✅ University branding (UPHSD logo, colors)
-- ✅ Document code: `UPHMO-CCS-GEN-901/rev0`
-- ✅ 6 identical attendance sheets
-- ✅ Proper table formatting
-- ✅ Print-optimized CSS (A4 size, proper margins)
-
-## Faculty Members Listed
+## Faculty Members
 
 1. **MARIBEL SANDAGON** - OIC (Officer-in-Charge)
 2. **VAL PATRICK FABREGAS** - FACULTY
@@ -73,85 +113,52 @@ The generated HTML includes:
 9. **ARNOLD GALVE** - FACULTY
 10. **EDWARD CRUZ** - FACULTY
 
+---
+
 ## Requirements
 
-- Node.js 14+ and npm
-- Dependencies:
-  - `adm-zip` - For extracting ZIP/DOCX files
-  - `fast-xml-parser` - For parsing XML content
+- Modern web browser (Chrome, Edge, Firefox)
+- For PWA: Python 3.x OR Node.js
 
-## How It Works
+---
 
-1. **Unzips the DOCX** (it's actually a ZIP archive!)
-2. **Parses XML files** (`document.xml`, `header1.xml`)
-3. **Extracts images** from `word/media/` folder
-4. **Generates HTML** with embedded images
-5. **Creates a report** with all extracted content
+## DOCX Extractor (Optional)
 
-## Usage Examples
+To extract content from Word documents:
 
-### Basic Usage:
-```javascript
-const DocxExtractor = require('./extract_docx_content');
-
-const extractor = new DocxExtractor("your-document.docx");
-extractor.extractAll();
-extractor.createPrintableHtml();
+### Install Dependencies
+```bash
+npm install
 ```
 
-### Extract Images Only:
-```javascript
-const extractor = new DocxExtractor("document.docx");
-const zip = new AdmZip("document.docx");
-const images = extractor._extractImages(zip, zip.getEntries());
+### Run the Extractor
+```bash
+node extract_docx_content.js
 ```
 
-## Customization
+This creates an `extracted_content` folder with:
+- **images/** - All extracted images
+- **extraction_report.md** - Detailed extraction report
+- **printable_attendance.html** - Ready-to-print HTML file
 
-You can customize the HTML output by editing the `create_printable_html()` method:
-- Change colors (currently maroon for UPHSD branding)
-- Adjust table formatting
-- Modify page size (default: A4)
-- Add/remove header sections
-
-## File Structure
-
-```
-ATTENDANCE-SHEET-CCS/
-├── extract_docx_content.js          # Node.js extraction script
-├── package.json                      # Node.js dependencies
-├── node_modules/                     # Node.js packages (after npm install)
-├── ATTENDANCE-SHEET-CCS-2026.docx   # Original document
-├── README.md                         # This file
-└── extracted_content/                # Generated output
-    ├── images/                       # Extracted images
-    │   ├── image1.png
-    │   ├── image2.png
-    │   └── image3.jpeg
-    ├── extraction_report.md          # Detailed report
-    └── printable_attendance.html     # Print-ready file
-```
+---
 
 ## Troubleshooting
 
-**No images extracted?**
-- Check if the DOCX file has images in the header
-- Verify the file is a valid `.docx` (not `.doc`)
+**Server won't start?**
+- Make sure no other servers are using the same port
+- Try a different port: `python -m http.server 5000`
 
-**HTML doesn't look right?**
-- Try opening in a different browser (Chrome, Firefox, Edge)
-- Check if images are in the `extracted_content/images/` folder
+**PWA install button not showing?**
+- Make sure you're using Chrome or Edge
+- Must be served via HTTP (not file://)
+- Generate icons first using `generate-icons.html`
 
-**Print margins are off?**
-- Adjust `@page` settings in the HTML file's `<style>` section
-- Use your browser's print preview to check
+**Data not saving?**
+- The app uses localStorage - don't clear browser data
+- Data is stored per-domain (localhost vs file://)
 
-## Notes
-
-- The script automatically finds the first `.docx` file in the current directory
-- Images maintain their original quality
-- The HTML file is self-contained (images are referenced relatively)
-- Works on Windows, Mac, and Linux
+---
 
 ## For UPHSD CCS Faculty
 
@@ -159,6 +166,6 @@ This tool was created for the **College of Computer Studies** at the **Universit
 
 ---
 
-**Created by:** UPHSD Molino CCS OJT Team Batch 2 - Lloyd Alvin Degaños
-**Date:** January 19, 2026  
-**Version:** 1.0
+**Created by:** UPHSD Molino CCS OJT Team Batch 2 - Lloyd Alvin Degaños  
+**Date:** January 2026  
+**Version:** 2.0 (PWA)
