@@ -12,7 +12,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -46,10 +46,44 @@ body {
     font-weight: bold;
     color: maroon;
     border-bottom: 3px solid maroon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.time-separator {
+    color: #ccc;
+    font-weight: normal;
+}
+
+.current-time {
+    background: maroon;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    letter-spacing: 1px;
 }
 
 .main-content {
     padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.left-panel {
+    flex: 1;
+    min-width: 400px;
+}
+
+.right-panel {
+    flex: 1.5;
+    min-width: 500px;
+    display: flex;
+    flex-direction: column;
 }
 
 .teacher-selector {
@@ -109,14 +143,15 @@ body {
 
 .action-buttons {
     display: flex;
-    gap: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
     justify-content: center;
     margin: 30px 0;
 }
 
 .action-btn {
-    padding: 20px 50px;
-    font-size: 20px;
+    padding: 15px 30px;
+    font-size: 16px;
     font-weight: bold;
     border: none;
     border-radius: 10px;
@@ -124,6 +159,12 @@ body {
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 120px;
 }
 
 .action-btn:disabled {
@@ -154,8 +195,33 @@ body {
 }
 
 .attendance-table {
-    margin-top: 40px;
+    margin-top: 0;
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 500px;
+    border: 2px solid maroon;
+    border-radius: 10px;
+    background: #f8f9fa;
+    padding: 20px;
+    flex: 1;
+}
+
+.attendance-table::-webkit-scrollbar {
+    width: 8px;
+}
+
+.attendance-table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.attendance-table::-webkit-scrollbar-thumb {
+    background: maroon;
+    border-radius: 4px;
+}
+
+.attendance-table::-webkit-scrollbar-thumb:hover {
+    background: #5a0000;
 }
 
 table {
@@ -383,6 +449,8 @@ tr:hover {
     padding: 30px;
     border-radius: 10px;
     margin-top: 20px;
+    width: 100%;
+    flex-basis: 100%;
 }
 
 .admin-tabs {

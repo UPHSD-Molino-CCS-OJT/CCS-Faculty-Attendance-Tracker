@@ -141,6 +141,7 @@ function init() {
     loadFaculty();
     loadRecords();
     displayDate();
+    startClock();
     renderTeacherGrid();
     updateAttendanceTable();
     initTimePicker();
@@ -558,6 +559,24 @@ function displayDate() {
     document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', options);
 }
 
+// Display and update current time
+function displayTime() {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit',
+        hour12: true 
+    });
+    document.getElementById('timeDisplay').textContent = timeStr;
+}
+
+// Start the clock
+function startClock() {
+    displayTime();
+    setInterval(displayTime, 1000);
+}
+
 // Render teacher selection grid
 function renderTeacherGrid() {
     const grid = document.getElementById('teacherGrid');
@@ -703,8 +722,19 @@ function updateAttendanceTable() {
 }
 
 // Show alert message
-function showAlert(message, type) {
+function showAlert(message, type, clearPrevious = false) {
     const container = document.getElementById('alertContainer');
+    
+    // Clear previous alerts if requested (useful for selection messages)
+    if (clearPrevious || message.startsWith('Selected:')) {
+        const existingAlerts = container.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => {
+            if (alert.textContent.startsWith('Selected:')) {
+                alert.remove();
+            }
+        });
+    }
+    
     const alert = document.createElement('div');
     alert.className = `alert alert-${type}`;
     alert.textContent = message;
